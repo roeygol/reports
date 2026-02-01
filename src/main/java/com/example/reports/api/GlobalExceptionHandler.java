@@ -24,6 +24,11 @@ public class GlobalExceptionHandler {
         return buildError(HttpStatus.NOT_FOUND, "REPORT_NOT_FOUND", ex.getMessage());
     }
 
+    @ExceptionHandler(ReportAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleReportAlreadyExists(ReportAlreadyExistsException ex) {
+        return buildError(HttpStatus.CONFLICT, "REPORT_ALREADY_EXISTS", ex.getMessage());
+    }
+
     @ExceptionHandler(ReportConfigurationException.class)
     public ResponseEntity<ErrorResponse> handleReportConfiguration(ReportConfigurationException ex) {
         return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "REPORT_CONFIGURATION_ERROR", ex.getMessage());
