@@ -4,6 +4,8 @@ import com.example.reports.domain.Report;
 import com.example.reports.exception.InvalidReportRequestException;
 import com.example.reports.exception.ReportConfigurationException;
 import com.example.reports.service.CSVService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import com.example.reports.service.DB2Service;
 import com.example.reports.service.MailService;
 import com.example.reports.service.MongoReportService;
@@ -13,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportsServiceImpl implements ReportsService {
@@ -25,15 +30,18 @@ public class ReportsServiceImpl implements ReportsService {
     private final DB2Service db2Service;
     private final CSVService csvService;
     private final MailService mailService;
+    private final Validator validator;
 
     public ReportsServiceImpl(MongoReportService mongoReportService,
                               DB2Service db2Service,
                               CSVService csvService,
-                              MailService mailService) {
+                              MailService mailService,
+                              Validator validator) {
         this.mongoReportService = mongoReportService;
         this.db2Service = db2Service;
         this.csvService = csvService;
         this.mailService = mailService;
+        this.validator = validator;
     }
 
     @Override
