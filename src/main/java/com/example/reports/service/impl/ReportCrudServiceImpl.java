@@ -35,7 +35,7 @@ public class ReportCrudServiceImpl implements ReportCrudService {
         try {
             return repository.save(report);
         } catch (DuplicateKeyException e) {
-            throw new ReportAlreadyExistsException(report.getReportId());
+            throw new ReportAlreadyExistsException(report.getReportName());
         }
     }
 
@@ -52,7 +52,11 @@ public class ReportCrudServiceImpl implements ReportCrudService {
         existing.setEmailBody1(report.getEmailBody1());
         existing.setEmailBody2(report.getEmailBody2());
         existing.setFeatureName(report.getFeatureName());
-        return repository.save(existing);
+        try {
+            return repository.save(existing);
+        } catch (DuplicateKeyException e) {
+            throw new ReportAlreadyExistsException(report.getReportName());
+        }
     }
 
     @Override

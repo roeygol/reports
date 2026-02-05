@@ -55,6 +55,7 @@ public class ReportCrudController {
     @ApiResponse(responseCode = "200", description = "Report updated")
     @ApiResponse(responseCode = "400", description = "Invalid request")
     @ApiResponse(responseCode = "404", description = "Report not found")
+    @ApiResponse(responseCode = "409", description = "Report name already exists")
     @PutMapping("/{reportId}")
     public ResponseEntity<Report> update(
             @PathVariable String reportId,
