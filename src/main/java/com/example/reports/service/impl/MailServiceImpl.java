@@ -16,6 +16,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -32,7 +34,10 @@ public class MailServiceImpl implements MailService {
     @Override
     @Async
     public void sendReport(String templateId,
-                           String mailingListName,
+                           List<String> targetAddress,
+                           String emailSubject,
+                           String emailBody1,
+                           String emailBody2,
                            byte[] attachment,
                            String attachmentFileName) {
 
@@ -45,7 +50,10 @@ public class MailServiceImpl implements MailService {
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("templateId", templateId);
-            body.add("mailingListName", mailingListName);
+            body.add("targetAddress", targetAddress);
+            body.add("emailSubject", emailSubject);
+            body.add("emailBody1", emailBody1);
+            body.add("emailBody2", emailBody2);
             body.add("attachmentFileName", attachmentFileName);
             body.add("attachment", new ByteArrayResource(attachment) {
                 @Override
@@ -65,7 +73,7 @@ public class MailServiceImpl implements MailService {
                 throw new MailSendException("Mail service returned " + response.getStatusCode(), null);
             }
 
-            log.info("Mail for report '{}' sent to mailing list '{}' via REST service", attachmentFileName, mailingListName);
+            log.info("Mail for report '{}' sent to {} recipients via REST service", attachmentFileName, targetAddress.size());
         } catch (MailSendException ex) {
             throw ex;
         } catch (Exception ex) {

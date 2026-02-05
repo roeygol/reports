@@ -16,9 +16,8 @@ public class MongoReportServiceImpl implements MongoReportService {
     }
 
     @Override
-    public Report getReport(String reportName) {
-        return repository.findById(reportName)
+    public Report getReportByName(String reportName) {
+        return repository.findByReportName(reportName)
                 .orElseThrow(() -> new ReportNotFoundException(reportName));
     }
 }
-

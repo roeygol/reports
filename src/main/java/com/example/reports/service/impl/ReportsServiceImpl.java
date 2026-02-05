@@ -1,6 +1,7 @@
 package com.example.reports.service.impl;
 
 import com.example.reports.domain.Report;
+import com.example.reports.domain.ReportFileType;
 import com.example.reports.exception.InvalidReportRequestException;
 import com.example.reports.exception.ReportConfigurationException;
 import com.example.reports.service.CSVService;
@@ -51,7 +52,7 @@ public class ReportsServiceImpl implements ReportsService {
         try {
             validateReportName(reportName);
 
-            Report report = mongoReportService.getReport(reportName);
+            Report report = mongoReportService.getReportByName(reportName);
             validateReport(report);
 
             DB2QueryResult result = db2Service.executeQuery(report.getQuery());
@@ -60,13 +61,18 @@ public class ReportsServiceImpl implements ReportsService {
                 log.warn("Report '{}' returned empty result set", reportName);
             }
 
-            byte[] csvBytes = csvService.generateCSV(result);
+            byte[] fileBytes = csvService.generateCSV(result);
 
-            String attachmentFileName = reportName + ".csv";
+            String fileExtension = report.getFileType() == ReportFileType.EXCEL ? ".xlsx" : ".csv";
+            String attachmentFileName = reportName + fileExtension;
+
             mailService.sendReport(
                     report.getTemplateId(),
-                    report.getMailingListName(),
-                    csvBytes,
+                    report.getTargetAddress(),
+                    report.getEmailSubject(),
+                    report.getEmailBody1(),
+                    report.getEmailBody2(),
+                    fileBytes,
                     attachmentFileName
             );
 
@@ -83,8 +89,8 @@ public class ReportsServiceImpl implements ReportsService {
             throw new InvalidReportRequestException("reportName must not be null or blank");
         }
         String trimmed = reportName.trim();
-        if (trimmed.length() < 3 || trimmed.length() > 100) {
-            throw new InvalidReportRequestException("reportName length must be between 3 and 100");
+        if (trimmed.length() > 100) {
+            throw new InvalidReportRequestException("reportName length must be at most 100");
         }
         if (!trimmed.matches(REPORT_NAME_PATTERN)) {
             throw new InvalidReportRequestException("reportName has invalid format");
@@ -104,4 +110,3 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 }
-
