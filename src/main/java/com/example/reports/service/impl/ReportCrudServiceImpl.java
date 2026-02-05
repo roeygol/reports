@@ -25,9 +25,9 @@ public class ReportCrudServiceImpl implements ReportCrudService {
     }
 
     @Override
-    public Report findById(String reportName) {
-        return repository.findById(reportName)
-                .orElseThrow(() -> new ReportNotFoundException(reportName));
+    public Report findById(String reportId) {
+        return repository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
     @Override
@@ -35,25 +35,31 @@ public class ReportCrudServiceImpl implements ReportCrudService {
         try {
             return repository.save(report);
         } catch (DuplicateKeyException e) {
-            throw new ReportAlreadyExistsException(report.getReportName());
+            throw new ReportAlreadyExistsException(report.getReportId());
         }
     }
 
     @Override
-    public Report update(String reportName, Report report) {
-        Report existing = repository.findById(reportName)
-                .orElseThrow(() -> new ReportNotFoundException(reportName));
+    public Report update(String reportId, Report report) {
+        Report existing = repository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
+        existing.setReportName(report.getReportName());
         existing.setQuery(report.getQuery());
         existing.setTemplateId(report.getTemplateId());
-        existing.setMailingListName(report.getMailingListName());
+        existing.setTargetAddress(report.getTargetAddress());
+        existing.setFileType(report.getFileType());
+        existing.setEmailSubject(report.getEmailSubject());
+        existing.setEmailBody1(report.getEmailBody1());
+        existing.setEmailBody2(report.getEmailBody2());
+        existing.setFeatureName(report.getFeatureName());
         return repository.save(existing);
     }
 
     @Override
-    public void delete(String reportName) {
-        if (!repository.existsById(reportName)) {
-            throw new ReportNotFoundException(reportName);
+    public void delete(String reportId) {
+        if (!repository.existsById(reportId)) {
+            throw new ReportNotFoundException(reportId);
         }
-        repository.deleteById(reportName);
+        repository.deleteById(reportId);
     }
 }

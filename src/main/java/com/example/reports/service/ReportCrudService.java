@@ -8,11 +8,11 @@ public interface ReportCrudService {
 
     List<Report> findAll();
 
-    Report findById(String reportName);
+    Report findById(String reportId);
 
     Report create(Report report);
 
-    Report update(String reportName, Report report);
+    Report update(String reportId, Report report);
 
-    void delete(String reportName);
+    void delete(String reportId);
 }

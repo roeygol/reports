@@ -1,17 +1,49 @@
 package com.example.reports.api.dto;
 
+import com.example.reports.domain.ReportFileType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 public class ReportUpdateRequest {
 
     @NotBlank
+    @Size(max = 100)
+    private String reportName;
+
+    @NotBlank
     private String query;
 
-    @NotBlank
+    @Size(max = 36)
     private String templateId;
 
-    @NotBlank
-    private String mailingListName;
+    @Size(max = 10)
+    private List<@Size(max = 500) String> targetAddress;
+
+    @NotNull
+    private ReportFileType fileType;
+
+    @Size(max = 200)
+    private String emailSubject;
+
+    private String emailBody1;
+
+    private String emailBody2;
+
+    @Size(max = 500)
+    private String featureName;
+
+    // Getters and Setters
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
 
     public String getQuery() {
         return query;
@@ -29,11 +61,51 @@ public class ReportUpdateRequest {
         this.templateId = templateId;
     }
 
-    public String getMailingListName() {
-        return mailingListName;
+    public List<String> getTargetAddress() {
+        return targetAddress;
     }
 
-    public void setMailingListName(String mailingListName) {
-        this.mailingListName = mailingListName;
+    public void setTargetAddress(List<String> targetAddress) {
+        this.targetAddress = targetAddress;
+    }
+
+    public ReportFileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(ReportFileType fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getEmailSubject() {
+        return emailSubject;
+    }
+
+    public void setEmailSubject(String emailSubject) {
+        this.emailSubject = emailSubject;
+    }
+
+    public String getEmailBody1() {
+        return emailBody1;
+    }
+
+    public void setEmailBody1(String emailBody1) {
+        this.emailBody1 = emailBody1;
+    }
+
+    public String getEmailBody2() {
+        return emailBody2;
+    }
+
+    public void setEmailBody2(String emailBody2) {
+        this.emailBody2 = emailBody2;
+    }
+
+    public String getFeatureName() {
+        return featureName;
+    }
+
+    public void setFeatureName(String featureName) {
+        this.featureName = featureName;
     }
 }

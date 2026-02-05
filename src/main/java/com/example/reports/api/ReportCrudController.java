@@ -32,12 +32,12 @@ public class ReportCrudController {
         return ResponseEntity.ok(reportCrudService.findAll());
     }
 
-    @Operation(summary = "Get report by name")
+    @Operation(summary = "Get report by ID")
     @ApiResponse(responseCode = "200", description = "Success")
     @ApiResponse(responseCode = "404", description = "Report not found")
-    @GetMapping("/{reportName}")
-    public ResponseEntity<Report> findById(@PathVariable String reportName) {
-        return ResponseEntity.ok(reportCrudService.findById(reportName));
+    @GetMapping("/{reportId}")
+    public ResponseEntity<Report> findById(@PathVariable String reportId) {
+        return ResponseEntity.ok(reportCrudService.findById(reportId));
     }
 
     @Operation(summary = "Create a new report")
@@ -55,20 +55,20 @@ public class ReportCrudController {
     @ApiResponse(responseCode = "200", description = "Report updated")
     @ApiResponse(responseCode = "400", description = "Invalid request")
     @ApiResponse(responseCode = "404", description = "Report not found")
-    @PutMapping("/{reportName}")
+    @PutMapping("/{reportId}")
     public ResponseEntity<Report> update(
-            @PathVariable String reportName,
+            @PathVariable String reportId,
             @Valid @RequestBody ReportUpdateRequest request) {
-        Report report = toReport(reportName, request);
-        return ResponseEntity.ok(reportCrudService.update(reportName, report));
+        Report report = toReport(request);
+        return ResponseEntity.ok(reportCrudService.update(reportId, report));
     }
 
     @Operation(summary = "Delete a report")
     @ApiResponse(responseCode = "204", description = "Report deleted")
     @ApiResponse(responseCode = "404", description = "Report not found")
-    @DeleteMapping("/{reportName}")
-    public ResponseEntity<Void> delete(@PathVariable String reportName) {
-        reportCrudService.delete(reportName);
+    @DeleteMapping("/{reportId}")
+    public ResponseEntity<Void> delete(@PathVariable String reportId) {
+        reportCrudService.delete(reportId);
         return ResponseEntity.noContent().build();
     }
 
@@ -77,16 +77,26 @@ public class ReportCrudController {
         report.setReportName(request.getReportName());
         report.setQuery(request.getQuery());
         report.setTemplateId(request.getTemplateId());
-        report.setMailingListName(request.getMailingListName());
+        report.setTargetAddress(request.getTargetAddress());
+        report.setFileType(request.getFileType());
+        report.setEmailSubject(request.getEmailSubject());
+        report.setEmailBody1(request.getEmailBody1());
+        report.setEmailBody2(request.getEmailBody2());
+        report.setFeatureName(request.getFeatureName());
         return report;
     }
 
-    private Report toReport(String reportName, ReportUpdateRequest request) {
+    private Report toReport(ReportUpdateRequest request) {
         Report report = new Report();
-        report.setReportName(reportName);
+        report.setReportName(request.getReportName());
         report.setQuery(request.getQuery());
         report.setTemplateId(request.getTemplateId());
-        report.setMailingListName(request.getMailingListName());
+        report.setTargetAddress(request.getTargetAddress());
+        report.setFileType(request.getFileType());
+        report.setEmailSubject(request.getEmailSubject());
+        report.setEmailBody1(request.getEmailBody1());
+        report.setEmailBody2(request.getEmailBody2());
+        report.setFeatureName(request.getFeatureName());
         return report;
     }
 }
